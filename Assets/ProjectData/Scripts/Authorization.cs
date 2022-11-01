@@ -27,12 +27,12 @@ public class Authorization : MonoBehaviourPunCallbacks
                 Debug.Log(result.PlayFabId);
                 PhotonNetwork.AuthValues = new AuthenticationValues(result.PlayFabId);
                 PhotonNetwork.NickName = result.PlayFabId;
-                Connect();
+               // Connect();
             },
             error => Debug.LogError(error));
     }
 
-    private void Connect()
+    public void Connect()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
 
@@ -45,6 +45,12 @@ public class Authorization : MonoBehaviourPunCallbacks
             PhotonNetwork.ConnectUsingSettings();
             PhotonNetwork.GameVersion = PhotonNetwork.AppVersion;
         }
+    }
+
+    public void Disconnect()
+    {
+        PhotonNetwork.Disconnect();
+
     }
 
     public override void OnConnectedToMaster()
@@ -66,4 +72,17 @@ public class Authorization : MonoBehaviourPunCallbacks
         base.OnJoinedRoom();
         Debug.Log($"OnJoinedRoom {PhotonNetwork.CurrentRoom.Name}");
     }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        Debug.LogErrorFormat("[Room Service] OnDisconnected() was called by PUN with reason {0}", cause);
+
+    }
+
+    public override void OnLeftRoom()
+    {
+        Debug.Log("[Room Service]: OnLeftRoom() Local Player has left the room.");
+    }
+
+
 }
